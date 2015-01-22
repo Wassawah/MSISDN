@@ -4,6 +4,8 @@
 //E.164 protokol
 namespace App;
 
+use Exception;
+
 class Lookup
 {
 
@@ -19,17 +21,23 @@ class Lookup
         $self = new Lookup;
         //clean up the number
         $number = $self->cleanNumber($number);
+
         if ($number != "") {
             //connect to base via PDO
             $dataB = new \App\DB\Database();
 
             //first need to check what country is it, so first 3 numbers
-            
-            $countyCode = $self->checkCountry($number, $dataB);
-            $result = $countyCode;
-            if (!empty($countyCode)) {
+            $whereId = "country_code";
+            $what = "country_code, country, ISO";
+            $result = $self->checkQuery($number, $whereId, $dataB, $what);
+
+            if (!empty($result)) {
                 //check what network -> country code
-                $returned = $self->checkNetwork($countyCode['country_code'], substr($number, $self->modeID, 3), $dataB);
+                $where = "AND country_code  = " . $result['country_code'];
+                $ndc = substr($number, $self->modeID, 3);
+                $whereId = "ndc";
+                $returned = $self->checkQuery($ndc, "ndc", $dataB, "*", $where);
+
                 if (empty($returned)) {
                     $result['error'] = "Unknown NDC";
                 } else {
@@ -41,44 +49,21 @@ class Lookup
             }
             $result['Subscribe'] = substr($number, $self->modeID);
         } else {           
-            $result['error'] = "Cant be null";
+            $result['error'] = "This is not a MSISDN?";
         }
         $result['number'] = $number;
-        //print_r($result);
         return $result;
     }
-    public function cleanNumber($number)
-    {
-        $number = preg_replace('/\D/', '', $number); //allow only numbers
-        $number = preg_replace('/(^00)/', '', $number); //remove double zero
 
-        return $number;
-    }
-
-    public function checkCountry($number, $dataB)
-    {
-        for ($i=1; $i <= 3; $i++) {
-            //get first three characters
-            $countyCode = substr($number, 0, $i);
-            //chech if in base
-            $return = $dataB->getRow("SELECT country, country_code, ISO FROM info WHERE country_code = $countyCode");
-            if ($return) {
-                $this->modeID = $i;
-                break;
-            }
-        }
-        return $return;
-    }
-
-    public function checkNetwork($countyCode, $ndc, $dataB)
-    {
+    public function checkQuery($ndc, $valueWhere, $dataB, $what = "*", $where = "") {
         $result = array();
         //chech if in base
         for ($i=1; $i <= 3; $i++) {
             //get first three characters
             $ndcsub = substr($ndc, 0, $i);
             //chech if in base
-            $return = $dataB->getRow("SELECT * FROM info WHERE country_code = $countyCode AND ndc = $ndcsub");
+            $query = "SELECT $what FROM info WHERE $valueWhere = $ndcsub $where";
+            $return = $dataB->getRow($query);
             if ($return) {
                 $result = $return;
                 $this->modeID += $i;
@@ -88,5 +73,14 @@ class Lookup
             //example: 1-800-999-9999 US will found at 80 but its unknown so go to 800 T-Mobile
         }
         return $result;
+    }
+
+    public function cleanNumber($number) {
+        $number = preg_replace('/\D/', '', $number); //allow only numbers
+        $number = preg_replace('/(^00)/', '', $number); //remove double zero
+        if (strlen($number) < 6) { //11 or 15 character is MSISDN!? So i could put that higher :D
+            return false;
+        }
+        return $number;
     }
 }
