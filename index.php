@@ -24,35 +24,29 @@ if(isset($_POST['phone']) && ($_POST['phone'] != "")) {
 
     $number = $_POST['phone'];
 
-    $info = \MSISDN\Lookup::msisdn($number);
+    $info = \App\Lookup::msisdn($number);
 
-    if (!empty($info['error'])) {
+
+
+    echo "<p>";
+    echo 'Number: ' . $info['number'] . "<br>";
+    echo "</p><p>";
+    echo 'Country code: ' . $info['country_code'] . "<br>";
+    echo 'Location: ' . $info['country'] . "<br>";
+    echo 'Region: ' . strtoupper($info['ISO']) . "<br>";
+    echo "</p>";
+    if (empty($info['error'])) {
         echo "<p>";
-        echo 'Number: ' . $number . "<br>";
-        echo 'Error:' . $info['error'];
+        echo 'NDC: ' . $info['ndc'] . "<br>";
+        echo 'Network: ' . $info['network'] . "<br>";
+        echo "</p>";
+        echo "</p><p>";
+        echo 'Subscriber Number: ' . $info['Subscribe'] . "<br>";
         echo "</p>";
     }else {
         echo "<p>";
-        echo 'Number: ' . $number . "<br>";
-        echo "</p><p>";
-        echo 'Code: ' . $info['code'] . "<br>";
-        echo 'Location: ' . $info['country'] . "<br>";
-        echo 'Region: ' . $info['isoCountry'] . "<br>";
-        echo "</p>";
-        if (empty($info['error1'])) {
-            echo "<p>";
-            echo 'NDC: ' . $info['NDC'] . "<br>";
-            echo 'Network: ' . $info['Network'] . "<br>";
-            echo 'Operator: ' . $info['Operator'] . "<br>";
-            echo "</p>";
-            echo "</p><p>";
-            echo 'Subscriber Number: ' . $info['Subscribe'] . "<br>";
-            echo "</p>";
-        }else {
-            echo "<p>";
-            echo 'Error:' . $info['error1'];
-            echo "</p>";  
-        }
+        echo 'Error:' . $info['error'];
+        echo "</p>";  
     }
 }
 ?>

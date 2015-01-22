@@ -3,50 +3,78 @@
 //Lookup msisdn
 //preveri številko - get 
 //E.164 protokol
-namespace MSISDN;
-
-include "App/FlatDB.php";
+namespace App;
+require "App/DB.php";
 
 class Lookup {
+    private $numberIDmove = 0;
+
     static public function msisdn($number)
     {
-    	$number = str_replace("+","",$number);
-        $number = str_replace(" ","",$number);
-        $numberSub = 0;
+        $classitself = new Lookup;
+        //clean up the number 
+        $number = $classitself->CleanNumber($number);
 
-    	//first need to check what country is it, so first 3 numbers
-		$county_code = self::checkCountry($number);
+        //connect to base via PDO
+        $db = new \App\DB\Database();
 
-        if (!empty($county_code['code'])) {
-        //check what network -> country code
-            $ndcInfo = self::checkNetwork($county_code['code'],substr($number,$county_code['intID'],3));
-        
-            $result = array_merge($county_code, $ndcInfo);
-            $numberSub = $result['intID'] + $result['intNDC'];
-        }else {
-            $result = $county_code;
+        //first need to check what country is it, so first 3 numbers
+
+        $county_code = $classitself->checkCountry($number,$db);
+        $result = $county_code;
+        if (!empty($county_code)) {
+            //check what network -> country code
+            $returned = $classitself->checkNetwork($county_code['country_code'],substr($number,$classitself->numberIDmove,3),$db);
+            if(empty($returned)) $result['error'] = "Unknown NDC";
+            else $result = $returned;
         }
-        $result['Subscribe'] = substr($number, $numberSub);
-		return $result;
+        $result['Subscribe'] = substr($number, $classitself->numberIDmove);
+        $result['number'] = $number;
+        //print_r($result);
+        return $result;
+    }
+    private function CleanNumber($number) {
+        $number = preg_replace('/\D/', '', $number); //allow only numbers
+        $number = preg_replace('/(^00)/', '', $number); //remove double zero
+
+        return $number;
+    }
+
+    private function checkCountry($number, $db) {
+        for ($i=1; $i <= 3; $i++) { 
+            //get first three characters
+            $county_code = substr($number, 0, $i);
+            //chech if in base
+            $return = $db->getRow("SELECT * FROM info WHERE country_code = $county_code");
+            if ($return) {
+                $this->numberIDmove = $i;
+                break;
+            }
+        }
+        if (empty($return)) $result['error'] = "Unknown";
+    	return $return;
     }
 
 
-    static private function checkCountry($number) {
-    	//get first three characters
-    	$county_code = substr($number, 0, 3);
-
-    	//chech if in base
-    	$check = \DB\FlatDB::checkIfexist($county_code);
-
-    	return $check;
-    }
-
-    static private function checkNetwork($code,$NDC) {
+    private function checkNetwork($county_code,$NDC,$db) {
+        $result = array();
         //chech if in base
-        $check = \DB\FlatDB::checkIfexistNetwork($code,$NDC);
-
-        return $check;
+        for ($i=1; $i <= 3; $i++) { 
+            //get first three characters
+            $NDCsub = substr($NDC, 0, $i);
+            //chech if in base
+            $return = $db->getRow("SELECT * FROM info WHERE country_code = $county_code AND ndc = $NDCsub");
+            if ($return) {
+                $result = $return;
+                $this->numberIDmove += $i;
+            }
+            //we need only the last one (max 3, min 1)
+            //if found at 1 still can overwrite after 3
+            //example: 1-800-999-9999 US will found at 80 but its unknown so go to 800 T-Mobile
+        }
+        return $result;
     }
+    
 }
 
 ?>

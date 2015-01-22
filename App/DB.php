@@ -3,49 +3,53 @@
 //Lookup msisdn
 //preveri številko - get 
 //E.164 protokol
-namespace MSISDN;
+namespace App\DB;
 
-include "App/FlatDB.php";
+use \PDO;
+class Database extends PDO
+{
+    # Class properties
+    private $DBH; // Database Handle
+    private $STH; // Statement Handle
 
-class Lookup {
-    static public function msisdn($number)
+    # Func: __construct()
+    # Desc: Connects to DB
+    public function __construct()
     {
-    	$number = str_replace("+","",$number);
-        $number = str_replace(" ","",$number);
-        $numberSub = 0;
+        // Connection information
+        $host   = ''; //change this
+        $dbname = ''; //change this if needed
+        $user   = ''; //change this
+        $pass   = ''; //change this
 
-    	//first need to check what country is it, so first 3 numbers
-		$county_code = self::checkCountry($number);
-
-        if (!empty($county_code['code'])) {
-        //check what network -> country code
-            $ndcInfo = self::checkNetwork($county_code['code'],substr($number,$county_code['intID'],3));
-        
-            $result = array_merge($county_code, $ndcInfo);
-            $numberSub = $result['intID'] + $result['intNDC'];
-        }else {
-            $result = $county_code;
+        // Attempt DB connection
+        try
+        {
+            $this->DBH = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
+            $this->DBH->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
-        $result['Subscribe'] = substr($number, $numberSub);
-		return $result;
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+        }
     }
-
-
-    static private function checkCountry($number) {
-    	//get first three characters
-    	$county_code = substr($number, 0, 3);
-
-    	//chech if in base
-    	$check = \DB\FlatDB::checkIfexist($county_code);
-
-    	return $check;
+    public function getRows($query, $params=array()){
+        try{ 
+            $stmt = $this->DBH->prepare($query); 
+            $stmt->execute($params);
+            return $stmt->fetchAll();       
+            }catch(PDOException $e){
+            throw new Exception($e->getMessage());
+        }       
     }
-
-    static private function checkNetwork($code,$NDC) {
-        //chech if in base
-        $check = \DB\FlatDB::checkIfexistNetwork($code,$NDC);
-
-        return $check;
+    public function getRow($query, $params=array()){
+        try{ 
+            $stmt = $this->DBH->prepare($query); 
+            $stmt->execute($params);
+            return $stmt->fetch();       
+            }catch(PDOException $e){
+            throw new Exception($e->getMessage());
+        }       
     }
 }
 
