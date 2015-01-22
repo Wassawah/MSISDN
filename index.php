@@ -23,7 +23,8 @@ include "App/Lookup.php";
 if (isset($_POST['phone']) && ($_POST['phone'] != "")) {
     $number = $_POST['phone'];
 
-    $info = \App\Lookup::msisdn($number);
+    $lookup = new \App\Lookup();
+    $info = $lookup->msisdn($number);
 
     $labels = array(  
         "number" => "Search: ",

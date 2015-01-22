@@ -3,7 +3,9 @@ include "App/Lookup.php";
 
 if (isset($argv[1])) {
     $number = $argv[1];
-    $info = \App\Lookup::msisdn($number);
+    
+    $lookup = new \App\Lookup();
+    $info = $lookup->msisdn($number);
 
     $labels = array(  
         "number" => "Search: ",

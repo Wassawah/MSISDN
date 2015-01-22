@@ -4,8 +4,6 @@
 //E.164 protokol
 namespace App;
 
-use Exception;
-
 class Lookup
 {
 
@@ -13,66 +11,62 @@ class Lookup
     {
         include "App/DB.php";
     }
-    
-    private $modeID = 0;
 
-    public static function msisdn($number)
+    public $return;
+
+    public function arrayFill($key,$value)
     {
-        $self = new Lookup;
+        $this->return[$key] = $value;
+    }
+    public function msisdn($number)
+    {
         //clean up the number
-        $number = $self->cleanNumber($number);
+        $number = $this->cleanNumber($number);
 
-        if ($number != "") {
+        if ($number) {
             //connect to base via PDO
-            $dataB = new \App\DB\Database();
+            
 
             //first need to check what country is it, so first 3 numbers
-            $whereId = "country_code";
-            $what = "country_code, country, ISO";
-            $result = $self->checkQuery($number, $whereId, $dataB, $what);
+            //$whereId = "country_code";
+            //$what = "country_code, country, ISO";
+            //$result = $this->checkQuery($number, $whereId, $dataB, $what);
+            $obj = new Tools;
 
-            if (!empty($result)) {
+            $obj->value = $number;
+            $obj->valueId = "country_code";
+            $obj->what = "country_code, country, ISO";
+            $obj->checkQuery();
+
+            $this->return = $obj->result;
+            $obj->cleanUp();
+
+            if (!empty($this->return)) {
                 //check what network -> country code
-                $where = "AND country_code  = " . $result['country_code'];
-                $ndc = substr($number, $self->modeID, 3);
-                $whereId = "ndc";
-                $returned = $self->checkQuery($ndc, "ndc", $dataB, "*", $where);
+                $obj->value = substr($number, $obj->modeID, 3);
+                $obj->valueId = "ndc";
+                $obj->what = "*";
+                $obj->where = "AND country_code  = " . $this->return['country_code'];
+
+                $obj->checkQuery();
+                $returned= $obj->result;
+                $obj->cleanUp();
 
                 if (empty($returned)) {
-                    $result['error'] = "Unknown NDC";
+                    $this->return['error'] = 'Unknown NDC';
                 } else {
-                    $result = $returned;
-                    $result['numberDetail'] = $result['country_code'] ." ". $result['ndc'] ." ". substr($number, $self->modeID);
+                    $this->return = $returned;
+                    $this->return['numberDetail'] = $this->return['country_code'] ." ". $this->return['ndc'] ." ". substr($number, $obj->modeID);
+                    $this->return['Subscribe'] = substr($number, $obj->modeID);
                 }
             } else {
-                $result['error'] = "Unknown Country";
+                $this->arrayFill('error', 'Unknown Country');
             }
-            $result['Subscribe'] = substr($number, $self->modeID);
-        } else {           
-            $result['error'] = "This is not a MSISDN?";
+        } else {   
+            $this->arrayFill('error', 'This is not a MSISDN?');
         }
-        $result['number'] = $number;
-        return $result;
-    }
-
-    public function checkQuery($ndc, $valueWhere, $dataB, $what = "*", $where = "") {
-        $result = array();
-        //chech if in base
-        for ($i=1; $i <= 3; $i++) {
-            //get first three characters
-            $ndcsub = substr($ndc, 0, $i);
-            //chech if in base
-            $query = "SELECT $what FROM info WHERE $valueWhere = $ndcsub $where";
-            $return = $dataB->getRow($query);
-            if ($return) {
-                $result = $return;
-                $this->modeID += $i;
-            }
-            //we need only the last one (max 3, min 1)
-            //if found at 1 still can overwrite after 3
-            //example: 1-800-999-9999 US will found at 80 but its unknown so go to 800 T-Mobile
-        }
-        return $result;
+        $this->arrayFill('number', $number);
+        return $this->return;
     }
 
     public function cleanNumber($number) {
@@ -82,5 +76,49 @@ class Lookup
             return false;
         }
         return $number;
+    }
+}
+class Tools
+{
+    public $database = "";
+
+    public $value = "";
+    public $valueId = "";
+    public $where = "";
+    public $what = "";
+
+    public $modeID;
+    public $result;
+
+    public function __construct()
+    {
+        $this->database = new \App\DB\Database();
+    }
+
+    public function checkQuery() {
+        for ($i=1; $i <= 3; $i++) {
+            $dynamicValue= substr($this->value, 0, $i);
+
+            $query = "SELECT $this->what FROM info WHERE $this->valueId = $dynamicValue $this->where";
+            $return = $this->database->getRow($query);
+            if ($return) {
+                $this->result = $return;
+                $this->modeID += $i;
+            }
+        }
+    }
+
+    public function cleanUp()
+    {
+        $this->value = "";
+        $this->valueId = "";
+        $this->where = "";
+        $this->what = "";
+        $this->result ="";
+    }
+
+    public function getResult()
+    {
+      return $this->result;
     }
 }
