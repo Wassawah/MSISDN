@@ -4,12 +4,15 @@
 //E.164 protokol
 namespace App;
 
-require("App/DB.php");
-
 class Lookup
 {
+
+    public function __construct()
+    {
+        include "App/DB.php";
+    }
     
-    private $numberIDmove = 0;
+    private $modeID = 0;
 
     public static function msisdn($number)
     {
@@ -18,30 +21,32 @@ class Lookup
         $number = $self->cleanNumber($number);
         if ($number != "") {
             //connect to base via PDO
-            $db = new \App\DB\Database();
+            $dataB = new \App\DB\Database();
 
             //first need to check what country is it, so first 3 numbers
-
-            $county_code = $self->checkCountry($number, $db);
-            $result = $county_code;
-            if (!empty($county_code)) {
+            
+            $countyCode = $self->checkCountry($number, $dataB);
+            $result = $countyCode;
+            if (!empty($countyCode)) {
                 //check what network -> country code
-                $returned = $self->checkNetwork($county_code['country_code'], substr($number, $self->numberIDmove, 3), $db);
+                $returned = $self->checkNetwork($countyCode['country_code'], substr($number, $self->modeID, 3), $dataB);
                 if (empty($returned)) {
                     $result['error'] = "Unknown NDC";
                 } else {
                     $result = $returned;
                 }
+            } else {
+                $result['error'] = "Unknown Country";
             }
-            $result['Subscribe'] = substr($number, $self->numberIDmove);
+            $result['Subscribe'] = substr($number, $self->modeID);
         } else {
-            $result['number'] = $number;
             $result['error'] = "Cant be null";
         }
+        $result['number'] = $number;
         //print_r($result);
         return $result;
     }
-    private function cleanNumber($number)
+    public function cleanNumber($number)
     {
         $number = preg_replace('/\D/', '', $number); //allow only numbers
         $number = preg_replace('/(^00)/', '', $number); //remove double zero
@@ -49,36 +54,33 @@ class Lookup
         return $number;
     }
 
-    private function checkCountry($number, $db)
+    public function checkCountry($number, $dataB)
     {
         for ($i=1; $i <= 3; $i++) {
             //get first three characters
-            $county_code = substr($number, 0, $i);
+            $countyCode = substr($number, 0, $i);
             //chech if in base
-            $return = $db->getRow("SELECT * FROM info WHERE country_code = $county_code");
+            $return = $dataB->getRow("SELECT * FROM info WHERE country_code = $countyCode");
             if ($return) {
-                $this->numberIDmove = $i;
+                $this->modeID = $i;
                 break;
             }
-        }
-        if (empty($return)) {
-            $result['error'] = "Unknown";
         }
         return $return;
     }
 
-    private function checkNetwork($county_code, $NDC, $db)
+    public function checkNetwork($countyCode, $ndc, $dataB)
     {
         $result = array();
         //chech if in base
         for ($i=1; $i <= 3; $i++) {
             //get first three characters
-            $NDCsub = substr($NDC, 0, $i);
+            $ndcsub = substr($ndc, 0, $i);
             //chech if in base
-            $return = $db->getRow("SELECT * FROM info WHERE country_code = $county_code AND ndc = $NDCsub");
+            $return = $dataB->getRow("SELECT * FROM info WHERE country_code = $countyCode AND ndc = $ndcsub");
             if ($return) {
                 $result = $return;
-                $this->numberIDmove += $i;
+                $this->modeID += $i;
             }
             //we need only the last one (max 3, min 1)
             //if found at 1 still can overwrite after 3

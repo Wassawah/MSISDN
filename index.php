@@ -34,7 +34,7 @@ if (isset($_POST['phone']) && ($_POST['phone'] != "")) {
         echo 'Region: ' . strtoupper($info['ISO']) . "<br>";
         echo "</p>";
     }
-    if (empty($info['error'])) {
+    if (!empty($info['ndc'])) {
         echo "<p>";
         echo 'NDC: ' . $info['ndc'] . "<br>";
         echo 'Network: ' . $info['network'] . "<br>";

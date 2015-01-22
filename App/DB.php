@@ -9,12 +9,9 @@ use \PDO;
 
 class Database extends PDO
 {
-    # Class properties
-    private $DBH; // Database Handle
-    private $STH; // Statement Handle
+    // Class properties
+    private $DBH;
 
-    # Func: __construct()
-    # Desc: Connects to DB
     public function __construct()
     {
         // Connection information
