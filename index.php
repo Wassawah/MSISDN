@@ -20,21 +20,20 @@
 <?php
 include "App/Lookup.php";
 
-if(isset($_POST['phone']) && ($_POST['phone'] != "")) {
-
+if (isset($_POST['phone']) && ($_POST['phone'] != "")) {
     $number = $_POST['phone'];
 
     $info = \App\Lookup::msisdn($number);
 
-
-
     echo "<p>";
     echo 'Number: ' . $info['number'] . "<br>";
     echo "</p><p>";
-    echo 'Country code: ' . $info['country_code'] . "<br>";
-    echo 'Location: ' . $info['country'] . "<br>";
-    echo 'Region: ' . strtoupper($info['ISO']) . "<br>";
-    echo "</p>";
+    if (!empty($info['country_code'])) {
+        echo 'Country code: ' . $info['country_code'] . "<br>";
+        echo 'Location: ' . $info['country'] . "<br>";
+        echo 'Region: ' . strtoupper($info['ISO']) . "<br>";
+        echo "</p>";
+    }
     if (empty($info['error'])) {
         echo "<p>";
         echo 'NDC: ' . $info['ndc'] . "<br>";
@@ -43,10 +42,10 @@ if(isset($_POST['phone']) && ($_POST['phone'] != "")) {
         echo "</p><p>";
         echo 'Subscriber Number: ' . $info['Subscribe'] . "<br>";
         echo "</p>";
-    }else {
+    } else {
         echo "<p>";
         echo 'Error:' . $info['error'];
-        echo "</p>";  
+        echo "</p>";
     }
 }
 ?>

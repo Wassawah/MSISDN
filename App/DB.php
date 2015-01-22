@@ -6,6 +6,7 @@
 namespace App\DB;
 
 use \PDO;
+
 class Database extends PDO
 {
     # Class properties
@@ -17,40 +18,37 @@ class Database extends PDO
     public function __construct()
     {
         // Connection information
-        $host   = ''; //change this
-        $dbname = ''; //change this if needed
-        $user   = ''; //change this
+        $host   = 'localhost'; //change this
+        $dbname = 'msisdn'; //change this if needed
+        $user   = 'root'; //change this
         $pass   = ''; //change this
 
         // Attempt DB connection
-        try
-        {
+        try {
             $this->DBH = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
             $this->DBH->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        }
-        catch(PDOException $e)
-        {
+        } catch (PDOException $e) {
             echo $e->getMessage();
         }
     }
-    public function getRows($query, $params=array()){
-        try{ 
-            $stmt = $this->DBH->prepare($query); 
+    public function getRows($query, $params = array())
+    {
+        try {
+            $stmt = $this->DBH->prepare($query);
             $stmt->execute($params);
-            return $stmt->fetchAll();       
-            }catch(PDOException $e){
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
             throw new Exception($e->getMessage());
-        }       
+        }
     }
-    public function getRow($query, $params=array()){
-        try{ 
-            $stmt = $this->DBH->prepare($query); 
+    public function getRow($query, $params = array())
+    {
+        try {
+            $stmt = $this->DBH->prepare($query);
             $stmt->execute($params);
-            return $stmt->fetch();       
-            }catch(PDOException $e){
+            return $stmt->fetch();
+        } catch (PDOException $e) {
             throw new Exception($e->getMessage());
-        }       
+        }
     }
 }
-
-?>

@@ -1,47 +1,57 @@
 <?php
-
 //Lookup msisdn
-//preveri številko - get 
+//preveri številko - get
 //E.164 protokol
 namespace App;
-require "App/DB.php";
 
-class Lookup {
+require("App/DB.php");
+
+class Lookup
+{
+    
     private $numberIDmove = 0;
 
-    static public function msisdn($number)
+    public static function msisdn($number)
     {
-        $classitself = new Lookup;
-        //clean up the number 
-        $number = $classitself->CleanNumber($number);
+        $self = new Lookup;
+        //clean up the number
+        $number = $self->cleanNumber($number);
+        if ($number != "") {
+            //connect to base via PDO
+            $db = new \App\DB\Database();
 
-        //connect to base via PDO
-        $db = new \App\DB\Database();
+            //first need to check what country is it, so first 3 numbers
 
-        //first need to check what country is it, so first 3 numbers
-
-        $county_code = $classitself->checkCountry($number,$db);
-        $result = $county_code;
-        if (!empty($county_code)) {
-            //check what network -> country code
-            $returned = $classitself->checkNetwork($county_code['country_code'],substr($number,$classitself->numberIDmove,3),$db);
-            if(empty($returned)) $result['error'] = "Unknown NDC";
-            else $result = $returned;
+            $county_code = $self->checkCountry($number, $db);
+            $result = $county_code;
+            if (!empty($county_code)) {
+                //check what network -> country code
+                $returned = $self->checkNetwork($county_code['country_code'], substr($number, $self->numberIDmove, 3), $db);
+                if (empty($returned)) {
+                    $result['error'] = "Unknown NDC";
+                } else {
+                    $result = $returned;
+                }
+            }
+            $result['Subscribe'] = substr($number, $self->numberIDmove);
+        } else {
+            $result['number'] = $number;
+            $result['error'] = "Cant be null";
         }
-        $result['Subscribe'] = substr($number, $classitself->numberIDmove);
-        $result['number'] = $number;
         //print_r($result);
         return $result;
     }
-    private function CleanNumber($number) {
+    private function cleanNumber($number)
+    {
         $number = preg_replace('/\D/', '', $number); //allow only numbers
         $number = preg_replace('/(^00)/', '', $number); //remove double zero
 
         return $number;
     }
 
-    private function checkCountry($number, $db) {
-        for ($i=1; $i <= 3; $i++) { 
+    private function checkCountry($number, $db)
+    {
+        for ($i=1; $i <= 3; $i++) {
             //get first three characters
             $county_code = substr($number, 0, $i);
             //chech if in base
@@ -51,15 +61,17 @@ class Lookup {
                 break;
             }
         }
-        if (empty($return)) $result['error'] = "Unknown";
-    	return $return;
+        if (empty($return)) {
+            $result['error'] = "Unknown";
+        }
+        return $return;
     }
 
-
-    private function checkNetwork($county_code,$NDC,$db) {
+    private function checkNetwork($county_code, $NDC, $db)
+    {
         $result = array();
         //chech if in base
-        for ($i=1; $i <= 3; $i++) { 
+        for ($i=1; $i <= 3; $i++) {
             //get first three characters
             $NDCsub = substr($NDC, 0, $i);
             //chech if in base
@@ -74,7 +86,4 @@ class Lookup {
         }
         return $result;
     }
-    
 }
-
-?>
