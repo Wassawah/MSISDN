@@ -25,27 +25,25 @@ if (isset($_POST['phone']) && ($_POST['phone'] != "")) {
 
     $info = \App\Lookup::msisdn($number);
 
-    echo "<p>";
-    echo 'Number: ' . $info['number'] . "<br>";
-    echo "</p><p>";
-    if (!empty($info['country_code'])) {
-        echo 'Country code: ' . $info['country_code'] . "<br>";
-        echo 'Location: ' . $info['country'] . "<br>";
-        echo 'Region: ' . strtoupper($info['ISO']) . "<br>";
-        echo "</p>";
-    }
-    if (!empty($info['ndc'])) {
-        echo "<p>";
-        echo 'NDC: ' . $info['ndc'] . "<br>";
-        echo 'Network: ' . $info['network'] . "<br>";
-        echo "</p>";
-        echo "</p><p>";
-        echo 'Subscriber Number: ' . $info['Subscribe'] . "<br>";
-        echo "</p>";
-    } else {
-        echo "<p>";
-        echo 'Error:' . $info['error'];
-        echo "</p>";
+    $labels = array(  
+        "number" => "Search: ",
+        "numberDetail" => "Number: ",
+        "country_code" => "Country code: ",
+        "ndc" => "NDC: ",
+        "country" => "Country: ",
+        "ISO" => "Region: ",  
+        "network" => "Network: ",
+        "Subscribe" => "Subscriber Number: ",
+        "error" => "Error: "
+     );
+
+
+    echo "<h2>MSISDN Lookup</h2>";
+
+    foreach ($labels as $key => $value) {
+        if(isset($info[$key])) {
+            echo "<div>" . $value . $info[$key] . "</div>";;
+        }
     }
 }
 ?>

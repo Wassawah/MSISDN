@@ -5,19 +5,26 @@ if (isset($argv[1])) {
     $number = $argv[1];
     $info = \App\Lookup::msisdn($number);
 
+    $labels = array(  
+        "number" => "Search: ",
+        "numberDetail" => "Number: ",
+        "country_code" => "Country code: ",
+        "ndc" => "NDC: ",
+        "country" => "Country: ",
+        "ISO" => "Region: ",  
+        "network" => "Network: ",
+        "Subscribe" => "Subscriber Number: ",
+        "error" => "Error: "
+     );
+
+
     echo "\nMSISDN Lookup\n\n";
-    if (!empty($info['country_code'])) {
-        echo "Number: " . $info['number'] . "\n";
-        echo "Country: " . $info['country'] . "\n";        
-        echo "Country code: " . $info['country_code'] . "\n";
-        echo "Region: " . $info['ISO'] . "\n\n";
-    } 
-    if (!empty($info['ndc'])) {
-        echo "NDC: " . $info['ndc'] . "\n";
-        echo "Network: " . $info['network'] . "\n";
-        echo "Subscriber Number: " . $info['Subscribe'] . "\n\n";
-    } else {
-        echo "ERROR:" . $info['error'];
+
+    foreach ($labels as $key => $value) {
+        if(isset($info[$key])) {
+            echo $value . $info[$key] . "\n";;
+        }
     }
-    echo "\n";
+
+    echo "\nBye bye\n";
 }

@@ -34,6 +34,7 @@ class Lookup
                     $result['error'] = "Unknown NDC";
                 } else {
                     $result = $returned;
+                    $result['numberDetail'] = $result['country_code'] ." ". $result['ndc'] ." ". substr($number, $self->modeID);
                 }
             } else {
                 $result['error'] = "Unknown Country";
