@@ -1,27 +1,19 @@
 # MSISDN
-MSISDN Lookup version 0.3 22.1.2015
+MSISDN Lookup version 0.4 22.1.2015
 
-Added shell.php
-Use: php shell.php <MSISDN>
-
-
---------------------------------------------------------------
-Version 0.3 22.1.2015
-Added tests and passed:
-
-php -l
-phpcs --standard=PSR2
-phpmd codesize,design,naming,unusedcode,controversial --strict
-phpcpd --min-lines 3 --min-tokens 50
-
-
---------------------------------------------------------------
-Version 0.2 22.1.2015
-Added Database (info.sql) 
 
 Setup:
 - import info.sql into MySQL
+- change DataBase info (App/DB.php)
 
+Usage:
+Shell version (shell.php)
+Use: php shell.php +38640123456
+![alt tag](http://shrani.si/f/3p/TQ/1tinqk7A/shell.jpg)
+
+Web version (index.php)
+input 
+![alt tag](http://shrani.si/f/W/lo/3p4Zcj0G/web.jpg)
 
 
 # Info
@@ -29,29 +21,41 @@ Setup:
 phpcpd ../../ --min-lines 3 --min-tokens 50 --exclude vendor
 phpcpd 2.0.1-11-gfadc61e by Sebastian Bergmann.
 
-0.00% duplicated lines out of 195 total lines of code.
+0.00% duplicated lines out of 256 total lines of code.
 
-Time: 1.15 seconds, Memory: 2.25Mb
+Time: 1.21 seconds, Memory: 2.25Mb
+
 
 --------------------------------------------------------------
+
+phpcs shell.php --standard=PSR2
+
 phpcs index.php --standard=PSR2
 
-phpcs Lookup.php --standard=PSR2
+phpcs App/Lookup.php --standard=PSR2
 
-phpcs DB.php --standard=PSR2
+phpcs App/Tools.php --standard=PSR2
+
+phpcs App/DB.php --standard=PSR2
+
 
 --------------------------------------------------------------
+
 php -l index.php
-No syntax errors detected in index.php
 
-php -l Lookup.php
-No syntax errors detected in Lookup.php
+php -l shell.php
 
-php -l DB.php
-No syntax errors detected in DB.php
+php -l App/DB.php
+
+php -l App/Lookup.php
+
+php -l App/Tools.php
+
 
 --------------------------------------------------------------
+
 phpmd ../../ html codesize,design,naming,unusedcode,controversial --strict --reportfile ../../detect.html --exclude Vendor 
+
 
 --------------------------------------------------------------
 
@@ -281,5 +285,3 @@ Virgin Islands U.S.
 Yemen
 Zambia
 Zimbabwe 
-
-

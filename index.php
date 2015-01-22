@@ -26,13 +26,13 @@ if (isset($_POST['phone']) && ($_POST['phone'] != "")) {
     $lookup = new \App\Lookup();
     $info = $lookup->msisdn($number);
 
-    $labels = array(  
+    $labels = array(
         "number" => "Search: ",
         "numberDetail" => "Number: ",
         "country_code" => "Country code: ",
         "ndc" => "NDC: ",
         "country" => "Country: ",
-        "ISO" => "Region: ",  
+        "ISO" => "Region: ",
         "network" => "Network: ",
         "Subscribe" => "Subscriber Number: ",
         "error" => "Error: "
@@ -42,8 +42,8 @@ if (isset($_POST['phone']) && ($_POST['phone'] != "")) {
     echo "<h2>MSISDN Lookup</h2>";
 
     foreach ($labels as $key => $value) {
-        if(isset($info[$key])) {
-            echo "<div>" . $value . $info[$key] . "</div>";;
+        if (isset($info[$key])) {
+            echo "<div>" . $value . $info[$key] . "</div>";
         }
     }
 }
