@@ -1,6 +1,19 @@
 # MSISDN
 MSISDN Lookup version 0.3 22.1.2015
 
+Added shell.php
+Use: php shell.php <MSISDN>
+
+
+--------------------------------------------------------------
+Version 0.3 22.1.2015
+Added tests and passed:
+
+php -l
+phpcs --standard=PSR2
+phpmd codesize,design,naming,unusedcode,controversial --strict
+phpcpd --min-lines 3 --min-tokens 50
+
 
 --------------------------------------------------------------
 Version 0.2 22.1.2015
@@ -8,10 +21,10 @@ Added Database (info.sql)
 
 Setup:
 - import info.sql into MySQL
---------------------------------------------------------------
 
 
-# Info:
+
+# Info
 --------------------------------------------------------------
 phpcpd ../../ --min-lines 3 --min-tokens 50 --exclude vendor
 phpcpd 2.0.1-11-gfadc61e by Sebastian Bergmann.
@@ -19,10 +32,14 @@ phpcpd 2.0.1-11-gfadc61e by Sebastian Bergmann.
 0.00% duplicated lines out of 195 total lines of code.
 
 Time: 1.15 seconds, Memory: 2.25Mb
+
 --------------------------------------------------------------
 phpcs index.php --standard=PSR2
+
 phpcs Lookup.php --standard=PSR2
+
 phpcs DB.php --standard=PSR2
+
 --------------------------------------------------------------
 php -l index.php
 No syntax errors detected in index.php
@@ -32,8 +49,10 @@ No syntax errors detected in Lookup.php
 
 php -l DB.php
 No syntax errors detected in DB.php
+
 --------------------------------------------------------------
 phpmd ../../ html codesize,design,naming,unusedcode,controversial --strict --reportfile ../../detect.html --exclude Vendor 
+
 --------------------------------------------------------------
 
 --------------------------------------------------------------

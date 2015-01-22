@@ -39,7 +39,7 @@ class Lookup
                 $result['error'] = "Unknown Country";
             }
             $result['Subscribe'] = substr($number, $self->modeID);
-        } else {
+        } else {           
             $result['error'] = "Cant be null";
         }
         $result['number'] = $number;
@@ -60,7 +60,7 @@ class Lookup
             //get first three characters
             $countyCode = substr($number, 0, $i);
             //chech if in base
-            $return = $dataB->getRow("SELECT * FROM info WHERE country_code = $countyCode");
+            $return = $dataB->getRow("SELECT country, country_code, ISO FROM info WHERE country_code = $countyCode");
             if ($return) {
                 $this->modeID = $i;
                 break;

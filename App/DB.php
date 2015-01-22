@@ -28,22 +28,12 @@ class Database extends PDO
             echo $e->getMessage();
         }
     }
-    public function getRows($query, $params = array())
-    {
-        try {
-            $stmt = $this->DBH->prepare($query);
-            $stmt->execute($params);
-            return $stmt->fetchAll();
-        } catch (PDOException $e) {
-            throw new Exception($e->getMessage());
-        }
-    }
     public function getRow($query, $params = array())
     {
         try {
             $stmt = $this->DBH->prepare($query);
             $stmt->execute($params);
-            return $stmt->fetch();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             throw new Exception($e->getMessage());
         }
