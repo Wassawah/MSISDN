@@ -1,0 +1,13 @@
+{
+    "name": "skabar/msisdn",
+    "description": "MSISDN lookup",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andraz Skabar",
+            "email": "andraz.skabar@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
