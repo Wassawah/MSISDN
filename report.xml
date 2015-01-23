@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Application Test Suite" tests="25" assertions="25" failures="0" errors="0" time="0.199012">
+    <testsuite name="App\Test\DBTest" file="I:\Programi\wamp_new\www\MSISDN Lookup\Testing\DBTest.php" tests="6" assertions="6" failures="0" errors="0" time="0.065004">
+      <testsuite name="App\Test\DBTest::testGetRowSqlInjection" tests="3" assertions="3" failures="0" errors="0" time="0.029002">
+        <testcase name="testGetRowSqlInjection with data set #0" assertions="1" time="0.009001">
+          <system-out>Array
+(
+    [id] =&gt; 1148
+    [ndc] =&gt; 41
+    [ISO] =&gt; si
+    [country] =&gt; Slovenia
+    [country_code] =&gt; 386
+    [network] =&gt; Mobitel
+)
+</system-out>
+        </testcase>
+        <testcase name="testGetRowSqlInjection with data set #1" assertions="1" time="0.017001">
+          <system-out>Array
+(
+    [id] =&gt; 1
+    [ndc] =&gt; 88
+    [ISO] =&gt; ge
+    [country] =&gt; Abkhazia
+    [country_code] =&gt; 7
+    [network] =&gt; A-Mobile
+)
+</system-out>
+        </testcase>
+        <testcase name="testGetRowSqlInjection with data set #2" assertions="1" time="0.003000">
+          <system-out>Array
+(
+    [id] =&gt; 1148
+    [ndc] =&gt; 41
+    [ISO] =&gt; si
+    [country] =&gt; Slovenia
+    [country_code] =&gt; 386
+    [network] =&gt; Mobitel
+)
+</system-out>
+        </testcase>
+      </testsuite>
+      <testsuite name="App\Test\DBTest::testGetRow" tests="3" assertions="3" failures="0" errors="0" time="0.036002">
+        <testcase name="testGetRow with data set #0" assertions="1" time="0.019001"/>
+        <testcase name="testGetRow with data set #1" assertions="1" time="0.014001"/>
+        <testcase name="testGetRow with data set #2" assertions="1" time="0.003000"/>
+      </testsuite>
+    </testsuite>
+    <testsuite name="App\Test\TestLookup" file="I:\Programi\wamp_new\www\MSISDN Lookup\Testing\LookupTest.php" tests="13" assertions="13" failures="0" errors="0" time="0.048002">
+      <testsuite name="App\Test\TestLookup::testcleanNumberReturnCleanNumbers" tests="7" assertions="7" failures="0" errors="0" time="0.014000">
+        <testcase name="testcleanNumberReturnCleanNumbers with data set #0" assertions="1" time="0.002000"/>
+        <testcase name="testcleanNumberReturnCleanNumbers with data set #1" assertions="1" time="0.002000"/>
+        <testcase name="testcleanNumberReturnCleanNumbers with data set #2" assertions="1" time="0.002000"/>
+        <testcase name="testcleanNumberReturnCleanNumbers with data set #3" assertions="1" time="0.002000"/>
+        <testcase name="testcleanNumberReturnCleanNumbers with data set #4" assertions="1" time="0.002000"/>
+        <testcase name="testcleanNumberReturnCleanNumbers with data set #5" assertions="1" time="0.002000"/>
+        <testcase name="testcleanNumberReturnCleanNumbers with data set #6" assertions="1" time="0.002000"/>
+      </testsuite>
+      <testsuite name="App\Test\TestLookup::testpregReplaceReturnNumbers" tests="2" assertions="2" failures="0" errors="0" time="0.002000">
+        <testcase name="testpregReplaceReturnNumbers with data set #0" assertions="1" time="0.001000"/>
+        <testcase name="testpregReplaceReturnNumbers with data set #1" assertions="1" time="0.001000"/>
+      </testsuite>
+      <testsuite name="App\Test\TestLookup::testmsisdnReturnArray" tests="4" assertions="4" failures="0" errors="0" time="0.032002">
+        <testcase name="testmsisdnReturnArray with data set #0" assertions="1" time="0.006000"/>
+        <testcase name="testmsisdnReturnArray with data set #1" assertions="1" time="0.001000"/>
+        <testcase name="testmsisdnReturnArray with data set #2" assertions="1" time="0.008001"/>
+        <testcase name="testmsisdnReturnArray with data set #3" assertions="1" time="0.017001"/>
+      </testsuite>
+    </testsuite>
+    <testsuite name="App\Test\ToolsTest" file="I:\Programi\wamp_new\www\MSISDN Lookup\Testing\ToolsTest.php" tests="6" assertions="6" failures="0" errors="0" time="0.086005">
+      <testsuite name="App\Test\ToolsTest::testcheckQuery" tests="3" assertions="3" failures="0" errors="0" time="0.041002">
+        <testcase name="testcheckQuery with data set #0" assertions="1" time="0.013001">
+          <system-out>Array
+(
+    [country_code] =&gt; 386
+    [country] =&gt; Slovenia
+    [ISO] =&gt; si
+)
+</system-out>
+        </testcase>
+        <testcase name="testcheckQuery with data set #1" assertions="1" time="0.014000">
+          <system-out>Array
+(
+    [country_code] =&gt; 40
+    [country] =&gt; Romania
+    [ISO] =&gt; ro
+)
+</system-out>
+        </testcase>
+        <testcase name="testcheckQuery with data set #2" assertions="1" time="0.014001"/>
+      </testsuite>
+      <testsuite name="App\Test\ToolsTest::testcheckQueryNdc" tests="3" assertions="3" failures="0" errors="0" time="0.045003">
+        <testcase name="testcheckQueryNdc with data set #0" assertions="1" time="0.015001">
+          <system-out>Array
+(
+    [id] =&gt; 1149
+    [ndc] =&gt; 40
+    [ISO] =&gt; si
+    [country] =&gt; Slovenia
+    [country_code] =&gt; 386
+    [network] =&gt; SI.Mobil
+)
+</system-out>
+        </testcase>
+        <testcase name="testcheckQueryNdc with data set #1" assertions="1" time="0.015001">
+          <system-out>Array
+(
+    [id] =&gt; 1148
+    [ndc] =&gt; 41
+    [ISO] =&gt; si
+    [country] =&gt; Slovenia
+    [country_code] =&gt; 386
+    [network] =&gt; Mobitel
+)
+</system-out>
+        </testcase>
+        <testcase name="testcheckQueryNdc with data set #2" assertions="1" time="0.015001"/>
+      </testsuite>
+    </testsuite>
+  </testsuite>
+</testsuites>

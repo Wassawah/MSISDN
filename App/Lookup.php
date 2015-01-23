@@ -1,7 +1,4 @@
 <?php
-//Lookup msisdn
-//preveri številko - get
-//E.164 protokol
 namespace App;
 
 class Lookup
@@ -9,8 +6,8 @@ class Lookup
 
     public function __construct()
     {
-        include "App/DB.php";
-        include "App/Tools.php";
+        require_once("App/DB.php");
+        require_once("App/Tools.php");
     }
 
     public $return;
@@ -19,6 +16,7 @@ class Lookup
     {
         $this->return[$key] = $value;
     }
+
     public function msisdn($number)
     {
         //clean up the number
@@ -30,8 +28,6 @@ class Lookup
 
             //first need to check what country is it, so first 3 numbers
             $obj->value = $number;
-            $obj->valueId = "country_code";
-            $obj->what = "country_code, country, ISO";
             $obj->checkQuery();
 
             $this->return = $obj->result;
@@ -40,13 +36,11 @@ class Lookup
             if (!empty($this->return)) {
                 //check what network -> country code
                 $contryCode = $this->return['country_code'];
-                $obj->value = substr($number, $obj->modeID, 3);
-                $obj->valueId = "ndc";
-                $obj->what = "*";
-                $obj->where = "AND country_code  = " . $contryCode;
-
+                $obj->valueNdc = substr($number, $obj->modeID, 3);
+                $obj->value = $contryCode;
                 $obj->checkQuery();
-                $returned= $obj->result;
+
+                $returned = $obj->result;
                 $obj->cleanUp();
 
                 if (empty($returned)) {
@@ -56,6 +50,7 @@ class Lookup
                     $subscribe = substr($number, $obj->modeID);
                     $this->return['numberDetail'] = $contryCode ." ". $this->return['ndc'] ." ". $subscribe;
                     $this->return['Subscribe'] = $subscribe;
+                    $this->return['numberDetail'] = $contryCode ." ". $subscribe;
                 }
             } else {
                 $this->arrayFill('error', 'Unknown Country');
@@ -64,18 +59,25 @@ class Lookup
             $this->arrayFill('error', 'This is not a MSISDN?');
         }
         $this->arrayFill('number', $number);
+
         return $this->return;
     }
 
     public function cleanNumber($number)
     {
-        $number = preg_replace('/\D/', '', $number); //allow only numbers
-        $number = preg_replace('/(^00)/', '', $number); //remove double zero
+        //add sql inject perventor
+        
+        $number = $this->pregReplace('/\D/', '', $number); //allow only numbers
+        $number = $this->pregReplace('/(^00)/', '', $number); //remove double zero
         
         //11 or 15 character is MSISDN!? So i could put that higher :D
         if (strlen($number) < 6) {
             return false;
         }
         return $number;
+    }
+    public function pregReplace($what, $with, $string)
+    {
+        return preg_replace($what, $with, $string);
     }
 }

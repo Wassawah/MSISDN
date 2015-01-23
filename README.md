@@ -1,6 +1,7 @@
 # MSISDN
-MSISDN Lookup version 0.4 22.1.2015
+MSISDN Lookup version 0.5 22.1.2015
 
+Added Testing (phpUnit)
 
 Setup:
 - import info.sql into MySQL
@@ -8,53 +9,59 @@ Setup:
 
 Usage:
 Shell version (shell.php)
+
 Use: php shell.php +38640123456
+
+
 ![alt tag](http://shrani.si/f/3p/TQ/1tinqk7A/shell.jpg)
 
 Web version (index.php)
+
 input 
+
+
 ![alt tag](http://shrani.si/f/W/lo/3p4Zcj0G/web.jpg)
 
 
 # Info
 --------------------------------------------------------------
-phpcpd ../../ --min-lines 3 --min-tokens 50 --exclude vendor
+phpcpd ../../ --min-lines 3 --min-tokens 50 --exclude vendor --exclude coverage
 phpcpd 2.0.1-11-gfadc61e by Sebastian Bergmann.
 
-0.00% duplicated lines out of 256 total lines of code.
+0.00% duplicated lines out of 449 total lines of code.
 
-Time: 1.21 seconds, Memory: 2.25Mb
-
+Time: 1.82 seconds, Memory: 2.75Mb
 
 --------------------------------------------------------------
 
 phpcs shell.php --standard=PSR2
-
 phpcs index.php --standard=PSR2
 
 phpcs App/Lookup.php --standard=PSR2
-
 phpcs App/Tools.php --standard=PSR2
-
 phpcs App/DB.php --standard=PSR2
 
+phpcs Testing/LookupTest.php --standard=PSR2
+phpcs Testing/ToolsTest.php --standard=PSR2
+phpcs Testing/DBTest.php --standard=PSR2
 
 --------------------------------------------------------------
 
 php -l index.php
-
 php -l shell.php
 
 php -l App/DB.php
-
 php -l App/Lookup.php
-
 php -l App/Tools.php
+
+php -l Testing/DBTest.php
+php -l Testing/LookupTest.php
+php -l Testing/ToolsTest.php
 
 
 --------------------------------------------------------------
 
-phpmd ../../ html codesize,design,naming,unusedcode,controversial --strict --reportfile ../../detect.html --exclude Vendor 
+phpmd ../../ html codesize,design,naming,unusedcode,controversial --strict --reportfile ../../detect.html --exclude vendor
 
 
 --------------------------------------------------------------
