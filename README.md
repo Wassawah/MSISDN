@@ -8,11 +8,17 @@ Setup:
 
 Usage:
 Shell version (shell.php)
+
 Use: php shell.php +38640123456
+
+
 ![alt tag](http://shrani.si/f/3p/TQ/1tinqk7A/shell.jpg)
 
 Web version (index.php)
+
 input 
+
+
 ![alt tag](http://shrani.si/f/W/lo/3p4Zcj0G/web.jpg)
 
 
@@ -21,7 +27,7 @@ input
 phpcpd ../../ --min-lines 3 --min-tokens 50 --exclude vendor
 phpcpd 2.0.1-11-gfadc61e by Sebastian Bergmann.
 
-0.00% duplicated lines out of 256 total lines of code.
+0.00% duplicated lines out of 260 total lines of code.
 
 Time: 1.21 seconds, Memory: 2.25Mb
 

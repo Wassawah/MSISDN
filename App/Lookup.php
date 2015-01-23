@@ -69,13 +69,17 @@ class Lookup
 
     public function cleanNumber($number)
     {
-        $number = preg_replace('/\D/', '', $number); //allow only numbers
-        $number = preg_replace('/(^00)/', '', $number); //remove double zero
+        $number = $this->pregReplace('/\D/', '', $number); //allow only numbers
+        $number = $this->pregReplace('/(^00)/', '', $number); //remove double zero
         
         //11 or 15 character is MSISDN!? So i could put that higher :D
         if (strlen($number) < 6) {
             return false;
         }
         return $number;
+    }
+    public function pregReplace($what, $with, $string)
+    {
+        return preg_replace($what, $with, $string);
     }
 }
