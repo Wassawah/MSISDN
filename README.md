@@ -1,5 +1,5 @@
 # MSISDN
-MSISDN Lookup version 0.5 22.1.2015
+MSISDN Lookup version 0.5.1 22.1.2015
 
 Added Testing (phpUnit)
 
