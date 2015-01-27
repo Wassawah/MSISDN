@@ -28,7 +28,13 @@ input
 phpcpd ../../ --min-lines 3 --min-tokens 50 --exclude vendor --exclude coverage
 phpcpd 2.0.1-11-gfadc61e by Sebastian Bergmann.
 
+<<<<<<< HEAD
 0.00% duplicated lines out of 449 total lines of code.
+=======
+0.00% duplicated lines out of 260 total lines of code.
+
+Time: 1.21 seconds, Memory: 2.25Mb
+>>>>>>> 2cb8f77f31d35109bb71728e4a95c31f7ec986c9
 
 Time: 1.82 seconds, Memory: 2.75Mb
 

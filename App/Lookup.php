@@ -65,8 +65,11 @@ class Lookup
 
     public function cleanNumber($number)
     {
+<<<<<<< HEAD
         //add sql inject perventor
         
+=======
+>>>>>>> 2cb8f77f31d35109bb71728e4a95c31f7ec986c9
         $number = $this->pregReplace('/\D/', '', $number); //allow only numbers
         $number = $this->pregReplace('/(^00)/', '', $number); //remove double zero
         
